@@ -4,7 +4,6 @@ export const protectRoute = async (req, res, next) => {
   if(!req.auth.userId){
     return res.status(401).json({message: "Unauthorized"});
   }
-
   next();
 };
 
@@ -20,6 +19,7 @@ export const requireAdmin = async (req, res, next) => {
         next();
         
     } catch (error) {
-        
+        console.error(error);
+        next(error);
     }
     }
