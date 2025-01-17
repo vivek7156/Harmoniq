@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "seeds:songs": "node src/seeds/songs.js",
+    "seeds:albums": "node src/seeds/albums.js"
   },
   "keywords": [],
   "type": "module",
