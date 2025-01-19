@@ -22,9 +22,6 @@ export default function HomePage() {
         setMadeForYouSongs(madeRes.data);
         setFeaturedSongs(featuredRes.data);
         setTrendingSongs(trendingRes.data);
-        console.log("madeRes", madeRes.data);
-        console.log("featuredRes", featuredRes.data);
-        console.log("trendingRes", trendingRes.data);
       } catch (error) {
         console.error(error);
       } finally {

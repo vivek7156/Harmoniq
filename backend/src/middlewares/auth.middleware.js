@@ -20,6 +20,12 @@ export const requireAdmin = async (req, res, next) => {
         
     } catch (error) {
         console.error(error);
+        if (error.clerkError) {
+          return res.status(500).json({
+            message: "Failed to verify admin status",
+            error: error.errors,
+          });
+        }
         next(error);
     }
-    }
+    };
