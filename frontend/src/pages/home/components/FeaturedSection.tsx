@@ -1,38 +1,28 @@
-import { useEffect, useState } from "react";
-import { axiosInstance } from "@/lib/axios";
+import { Song } from "@/types";
 import FeaturedGridSkeleton from "@/components/skeletons/FeaturedGridSkeleton";
 import PlayButton from "./PlayButton";
 
-const FeaturedSection = () => {
-  const [featuredSongs, setFeaturedSongs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+type FeaturedSectionProps = {
+  featuredSongs: Song[];
+  isLoading: boolean;
+};
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const featuredRes = await axiosInstance.get("/songs/featured");
-        setFeaturedSongs(featuredRes.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setError("Failed to fetch featured songs");
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+const FeaturedSection = ({ featuredSongs, isLoading }: FeaturedSectionProps) => {
+  if (isLoading) {
+    return <FeaturedGridSkeleton />;
+  }
 
-  if (isLoading) return <FeaturedGridSkeleton />;
-
-  if (error) return <p className="text-red-500 mb-4 text-lg">{error}</p>;
+  if (featuredSongs.length === 0) {
+    return <p className="text-zinc-400 mb-4 text-lg">No featured songs found.</p>;
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
       {featuredSongs.map((song) => (
         <div
           key={song._id}
-          className="flex items-center bg-zinc-800/50 rounded-md overflow-hidden hover:bg-zinc-700/50 transition-colors group cursor-pointer relative">
+          className="flex items-center bg-zinc-800/50 rounded-md overflow-hidden hover:bg-zinc-700/50 transition-colors group cursor-pointer relative"
+        >
           <img
             src={song.imageUrl}
             alt={song.title}
@@ -42,10 +32,11 @@ const FeaturedSection = () => {
             <p className="font-medium truncate">{song.title}</p>
             <p className="text-sm text-zinc-400 truncate">{song.artist}</p>
           </div>
-          {/* <PlayButton song={song} /> */}
+          <PlayButton song={song} />
         </div>
       ))}
     </div>
   );
 };
+
 export default FeaturedSection;
