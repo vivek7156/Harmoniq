@@ -9,7 +9,6 @@ import { buttonVariants } from "./ui/button";
 
 const Topbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  console.log("isAdmin", isAdmin);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
