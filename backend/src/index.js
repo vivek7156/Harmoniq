@@ -20,7 +20,7 @@ import statRoutes from "./routes/stat.route.js";
 
 dotenv.config();
 
-const __dirname = path.resolve();
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const app = express();
 const PORT = process.env.PORT;
 
