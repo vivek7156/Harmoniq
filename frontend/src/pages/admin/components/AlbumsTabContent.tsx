@@ -25,4 +25,5 @@ const AlbumsTabContent = () => {
 		</Card>
 	);
 };
+
 export default AlbumsTabContent;

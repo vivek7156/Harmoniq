@@ -9,11 +9,9 @@ const seedDatabase = async () => {
 	try {
 		await mongoose.connect(process.env.MONGODB_URI);
 
-		// Clear existing data
 		await Album.deleteMany({});
 		await Song.deleteMany({});
 
-		// First, create all songs
 		const createdSongs = await Song.insertMany([
 			{
 				title: "City Rain",
@@ -129,7 +127,6 @@ const seedDatabase = async () => {
 			},
 		]);
 
-		// Create albums with references to song IDs
 		const albums = [
 			{
 				title: "Urban Nights",
@@ -161,10 +158,8 @@ const seedDatabase = async () => {
 			},
 		];
 
-		// Insert all albums
 		const createdAlbums = await Album.insertMany(albums);
 
-		// Update songs with their album references
 		for (let i = 0; i < createdAlbums.length; i++) {
 			const album = createdAlbums[i];
 			const albumSongs = albums[i].songs;

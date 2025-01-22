@@ -1,29 +1,38 @@
+import { useEffect, useState } from "react";
+import { axiosInstance } from "@/lib/axios";
 import Topbar from "@/components/Topbar";
-import { useMusicStore } from "@/stores/useMusicStore";
-import { useEffect } from "react";
 import FeaturedSection from "./components/FeaturedSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SectionGrid from "./components/SectionGrid";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 
-const HomePage = () => {
-	const {
-		fetchFeaturedSongs,
-		fetchMadeForYouSongs,
-		fetchTrendingSongs,
-		isLoading,
-		madeForYouSongs,
-		featuredSongs,
-		trendingSongs,
-	} = useMusicStore();
+export default function HomePage() {
+  const [madeForYouSongs, setMadeForYouSongs] = useState([]);
+  const [featuredSongs, setFeaturedSongs] = useState([]);
+  const [trendingSongs, setTrendingSongs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { initializeQueue } = usePlayerStore();
 
-	const { initializeQueue } = usePlayerStore();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [madeRes, featuredRes, trendingRes] = await Promise.all([
+          axiosInstance.get("/songs/made-for-you"),
+          axiosInstance.get("/songs/featured"),
+          axiosInstance.get("/songs/trending"),
+        ]);
+        setMadeForYouSongs(madeRes.data);
+        setFeaturedSongs(featuredRes.data);
+        setTrendingSongs(trendingRes.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-	useEffect(() => {
-		fetchFeaturedSongs();
-		fetchMadeForYouSongs();
-		fetchTrendingSongs();
-	}, [fetchFeaturedSongs, fetchMadeForYouSongs, fetchTrendingSongs]);
+    fetchData();
+  }, []);
 
 	useEffect(() => {
 		if (madeForYouSongs.length > 0 && featuredSongs.length > 0 && trendingSongs.length > 0) {
@@ -32,13 +41,13 @@ const HomePage = () => {
 		}
 	}, [initializeQueue, madeForYouSongs, trendingSongs, featuredSongs]);
 
-	return (
+  return (
 		<main className='rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900'>
 			<Topbar />
 			<ScrollArea className='h-[calc(100vh-180px)]'>
 				<div className='p-4 sm:p-6'>
 					<h1 className='text-2xl sm:text-3xl font-bold mb-6'>Good afternoon</h1>
-					<FeaturedSection />
+					<FeaturedSection featuredSongs={featuredSongs} isLoading={isLoading} />
 
 					<div className='space-y-8'>
 						<SectionGrid title='Made For You' songs={madeForYouSongs} isLoading={isLoading} />
@@ -47,6 +56,5 @@ const HomePage = () => {
 				</div>
 			</ScrollArea>
 		</main>
-	);
-};
-export default HomePage;
+  );
+}
