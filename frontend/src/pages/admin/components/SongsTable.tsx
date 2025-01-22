@@ -1,41 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Trash2 } from "lucide-react";
-import { useState, useEffect } from 'react';
-import { axiosInstance } from "@/lib/axios";
-import toast from "react-hot-toast";
 
 const SongsTable = () => {
-    const [songs, setSongs] = useState([]);
-    const [isLoadingSongs, setIsLoadingSongs] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const { songs, isLoading, error, deleteSong } = useMusicStore();
 
-    useEffect(() => {
-        const fetchSongs = async () => {
-          try {
-            const response = await axiosInstance.get("/songs");
-            setSongs(response.data);
-          } catch (error) {
-            console.error("Error fetching songs:", error);
-          } finally {
-            setIsLoadingSongs(false);
-          }
-        };
-        fetchSongs();
-      }, []);
-
-	const deleteSong = async (songId: string) => {
-		try {
-		  await axiosInstance.delete(`/admin/songs/${songId}`);
-		  setSongs((prevSongs) => prevSongs.filter((song) => song._id !== songId));
-		  toast.success("Song deleted successfully");
-		} catch (error) {
-		  console.error("Error deleting song:", error);
-		  setError("Error deleting song");
-		}
-	  };
-    
-	if (isLoadingSongs) {
+	if (isLoading) {
 		return (
 			<div className='flex items-center justify-center py-8'>
 				<div className='text-zinc-400'>Loading songs...</div>

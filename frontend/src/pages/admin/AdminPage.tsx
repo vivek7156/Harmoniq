@@ -1,125 +1,55 @@
-import { axiosInstance } from "@/lib/axios";
-import { useEffect, useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 import Header from "./components/Header";
 import DashboardStats from "./components/DashboardStats";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
-import { Music, Album } from "lucide-react";
+import { Album, Music } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SongsTabContent from "./components/SongsTabContent";
 import AlbumsTabContent from "./components/AlbumsTabContent";
+import { useEffect } from "react";
+import { useMusicStore } from "@/stores/useMusicStore";
 
 const AdminPage = () => {
-  const [adminLoading, setAdminLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+	const { isAdmin, isLoading } = useAuthStore();
 
-  const [songs, setSongs] = useState([]);
-  const [isLoadingSongs, setIsLoadingSongs] = useState(true);
+	const { fetchAlbums, fetchSongs, fetchStats } = useMusicStore();
 
-  const [albums, setAlbums] = useState([]);
-  const [isLoadingAlbums, setIsLoadingAlbums] = useState(true);
+	useEffect(() => {
+		fetchAlbums();
+		fetchSongs();
+		fetchStats();
+	}, [fetchAlbums, fetchSongs, fetchStats]);
 
-  const [stats, setStats] = useState({
-    totalSongs: 0,
-    totalAlbums: 0,
-    totalArtists: 0,
-    totalUsers: 0,
-  });
-  const [isLoadingStats, setIsLoadingStats] = useState(true);
+	if (!isAdmin && !isLoading) return <div>Unauthorized</div>;
 
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      try {
-        const response = await axiosInstance.get("/admin/check");
-        setIsAdmin(response.data.admin);
-      } catch (error) {
-        console.error("Error checking admin status:", error);
-      } finally {
-        setAdminLoading(false);
-      }
-    };
-    checkAdminStatus();
-  }, []);
+	return (
+		<div
+			className='min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-900
+   to-black text-zinc-100 p-8'
+		>
+			<Header />
 
-  // Fetch songs
-  useEffect(() => {
-    const fetchSongs = async () => {
-      try {
-        const response = await axiosInstance.get("/songs");
-        setSongs(response.data);
-      } catch (error) {
-        console.error("Error fetching songs:", error);
-      } finally {
-        setIsLoadingSongs(false);
-      }
-    };
-    fetchSongs();
-  }, []);
+			<DashboardStats />
 
-  // Fetch albums
-  useEffect(() => {
-    const fetchAlbums = async () => {
-      try {
-        const response = await axiosInstance.get("/albums");
-        setAlbums(response.data);
-      } catch (error) {
-        console.error("Error fetching albums:", error);
-      } finally {
-        setIsLoadingAlbums(false);
-      }
-    };
-    fetchAlbums();
-  }, []);
+			<Tabs defaultValue='songs' className='space-y-6'>
+				<TabsList className='p-1 bg-zinc-800/50'>
+					<TabsTrigger value='songs' className='data-[state=active]:bg-zinc-700'>
+						<Music className='mr-2 size-4' />
+						Songs
+					</TabsTrigger>
+					<TabsTrigger value='albums' className='data-[state=active]:bg-zinc-700'>
+						<Album className='mr-2 size-4' />
+						Albums
+					</TabsTrigger>
+				</TabsList>
 
-  // Fetch stats
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await axiosInstance.get("/stats");
-        setStats(response.data);
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      } finally {
-        setIsLoadingStats(false);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  if (!isAdmin) {
-    return <div>Not an admin</div>;
-  }
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-900 to-black text-zinc-100 p-8">
-      <Header />
-
-      <DashboardStats />
-
-      <Tabs defaultValue="songs" className="space-y-6">
-        <TabsList className="p-1 bg-zinc-800/50">
-          <TabsTrigger
-            value="songs"
-            className="data-[state=active]:bg-zinc-700"
-          >
-            <Music className="size-4 mr-2" />
-            Songs
-          </TabsTrigger>
-          <TabsTrigger
-            value="albums"
-            className="data-[state=active]:bg-zinc-700"
-          >
-            <Album className="size-4 mr-2" />
-            Albums
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="songs">
-          <SongsTabContent />
-        </TabsContent>
-        <TabsContent value="albums">
-          <AlbumsTabContent />
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+				<TabsContent value='songs'>
+					<SongsTabContent />
+				</TabsContent>
+				<TabsContent value='albums'>
+					<AlbumsTabContent />
+				</TabsContent>
+			</Tabs>
+		</div>
+	);
 };
-
 export default AdminPage;

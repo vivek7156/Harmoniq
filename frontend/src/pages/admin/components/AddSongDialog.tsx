@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { axiosInstance } from "@/lib/axios";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface NewSong {
@@ -24,8 +24,7 @@ interface NewSong {
 }
 
 const AddSongDialog = () => {
-    const [albums, setAlbums] = useState([]);
-    const [isLoadingAlbums, setIsLoadingAlbums] = useState(true);
+	const { albums } = useMusicStore();
 	const [songDialogOpen, setSongDialogOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -88,20 +87,6 @@ const AddSongDialog = () => {
 			setIsLoading(false);
 		}
 	};
-
-    useEffect(() => {
-        const fetchAlbums = async () => {
-          try {
-            const response = await axiosInstance.get("/albums");
-            setAlbums(response.data);
-          } catch (error) {
-            console.error("Error fetching albums:", error);
-          } finally {
-            setIsLoadingAlbums(false);
-          }
-        };
-        fetchAlbums();
-      }, []);
 
 	return (
 		<Dialog open={songDialogOpen} onOpenChange={setSongDialogOpen}>

@@ -1,56 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Music, Trash2 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { axiosInstance } from "@/lib/axios";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const AlbumsTable = () => {
-    const [albums, setAlbums] = useState([]);
-    const [isLoadingAlbums, setIsLoadingAlbums] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-  
-    useEffect(() => {
-      const fetchAlbums = async () => {
-        try {
-          const response = await axiosInstance.get("/albums");
-          setAlbums(response.data);
-        } catch (error) {
-          console.error("Error fetching albums:", error);
-          setError("Error fetching albums");
-        } finally {
-          setIsLoadingAlbums(false);
-        }
-      };
-      fetchAlbums();
-    }, []);
+	const { albums, deleteAlbum, fetchAlbums } = useMusicStore();
 
-    const deleteAlbum = async (albumId: string) => {
-        try {
-          await axiosInstance.delete(`/admin/albums/${albumId}`);
-          setAlbums((prevAlbums) => prevAlbums.filter((album) => album._id !== albumId));
-          toast.success("Album deleted successfully");
-        } catch (error) {
-          console.error("Error deleting album:", error);
-          setError("Error deleting album");
-        }
-      };
-    
-      if (isLoadingAlbums) {
-        return (
-          <div className='flex items-center justify-center py-8'>
-            <div className='text-zinc-400'>Loading albums...</div>
-          </div>
-        );
-      }
-    
-      if (error) {
-        return (
-          <div className='flex items-center justify-center py-8'>
-            <div className='text-red-400'>{error}</div>
-          </div>
-        );
-      }
+	useEffect(() => {
+		fetchAlbums();
+	}, [fetchAlbums]);
 
 	return (
 		<Table>

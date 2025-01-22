@@ -1,4 +1,3 @@
-import { Song } from "@/types";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useEffect, useRef } from "react";
 
