@@ -1,27 +1,9 @@
+import { useMusicStore } from "@/stores/useMusicStore";
 import { Library, ListMusic, PlayCircle, Users2 } from "lucide-react";
 import StatsCard from "./StatsCard";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "@/lib/axios";
 
 const DashboardStats = () => {
-    const [stats, setStats] = useState({
-        totalSongs: 0,
-        totalAlbums: 0,
-        totalArtists: 0,
-        totalUsers: 0,
-      });
-    
-      useEffect(() => {
-        const fetchStats = async () => {
-          try {
-            const response = await axiosInstance.get("/stats");
-            setStats(response.data);
-          } catch (error) {
-            console.error("Error fetching stats:", error);
-          }
-        };
-        fetchStats();
-      }, []);
+	const { stats } = useMusicStore();
 
 	const statsData = [
 		{

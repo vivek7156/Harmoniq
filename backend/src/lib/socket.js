@@ -9,8 +9,8 @@ export const initializeSocket = (server) => {
 		},
 	});
 
-	const userSockets = new Map(); 
-	const userActivities = new Map();
+	const userSockets = new Map(); // { userId: socketId}
+	const userActivities = new Map(); // {userId: activity}
 
 	io.on("connection", (socket) => {
 		socket.on("user_connected", (userId) => {
@@ -41,6 +41,7 @@ export const initializeSocket = (server) => {
 					content,
 				});
 
+				// send to receiver in realtime, if they're online
 				const receiverSocketId = userSockets.get(receiverId);
 				if (receiverSocketId) {
 					io.to(receiverSocketId).emit("receive_message", message);

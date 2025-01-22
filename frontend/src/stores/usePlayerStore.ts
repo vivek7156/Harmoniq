@@ -91,6 +91,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 		const { currentIndex, queue } = get();
 		const nextIndex = currentIndex + 1;
 
+		// if there is a next song to play, let's play it
 		if (nextIndex < queue.length) {
 			const nextSong = queue[nextIndex];
 
@@ -108,6 +109,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 				isPlaying: true,
 			});
 		} else {
+			// no next song
 			set({ isPlaying: false });
 
 			const socket = useChatStore.getState().socket;
@@ -123,6 +125,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 		const { currentIndex, queue } = get();
 		const prevIndex = currentIndex - 1;
 
+		// theres a prev song
 		if (prevIndex >= 0) {
 			const prevSong = queue[prevIndex];
 
@@ -140,6 +143,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 				isPlaying: true,
 			});
 		} else {
+			// no prev song
 			set({ isPlaying: false });
 
 			const socket = useChatStore.getState().socket;
