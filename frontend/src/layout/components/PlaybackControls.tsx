@@ -46,7 +46,7 @@ const PlaybackControls = () => {
     audio.addEventListener("loadedmetadata", updateDuration);
 
     const handleEnded = () => {
-      usePlayer.setState({ isPlaying: false });
+      usePlayerStore.setState({ isPlaying: false });
     };
 
     audio.addEventListener("ended", handleEnded);
