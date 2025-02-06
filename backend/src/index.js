@@ -27,12 +27,18 @@ const PORT = process.env.PORT || 5000;
 const httpServer = createServer(app);
 initializeSocket(httpServer);
 
-app.use(cors(
-    {
-        origin: "http://localhost:3000",
-        credentials: true,
-    }
-));
+const allowedOrigins = ["http://localhost:3000", "https://aesthetic-klepon-6ccd91.netlify.app"];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+}));
 
 app.use(express.json());
 app.use(clerkMiddleware());
