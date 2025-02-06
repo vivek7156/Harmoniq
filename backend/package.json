@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "seeds:songs": "node src/seeds/songs.js",
-    "seeds:albums": "node src/seeds/albums.js"
+    "start": "node index.js",
+    "build": "npm install"
   },
   "keywords": [],
   "type": "module",
