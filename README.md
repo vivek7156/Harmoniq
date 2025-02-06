@@ -14,6 +14,18 @@ Live demo - [![Demo](Demo)](https://aesthetic-klepon-6ccd91.netlify.app/)
 - Custom audio player with playback controls
 - "Made For You" personalized recommendations
 
+Home-
+![Screenshot 2025-02-06 181920](https://github.com/user-attachments/assets/f14e175f-ed3c-46b5-8eb6-fd87471e328b)
+
+
+Message-
+![Screenshot 2025-02-06 181942](https://github.com/user-attachments/assets/fde71ff8-85ae-4e5e-a530-04ff09b78a6f)
+
+
+Admin-
+![Screenshot 2025-02-06 182017](https://github.com/user-attachments/assets/f98d14bf-bea7-44a9-b220-752242286bc3)
+
+
 ## Getting Started
 
 1. Create an account or log in
